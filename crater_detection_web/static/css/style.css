@@ -1,0 +1,232 @@
+body {
+    background: linear-gradient(45deg, #000428, #004e92);
+    color: #fdfdfd;
+    min-height: 100vh;
+    overflow-x: hidden;
+    font-family: 'Orbitron', Georgia;;
+}
+
+/* Starfield Animation */
+#stars, #stars2, #stars3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#stars { background: transparent; animation: animStar 50s linear infinite; }
+#stars2 { background: transparent; animation: animStar 100s linear infinite; opacity: 0.5; }
+#stars3 { background: transparent; animation: animStar 150s linear infinite; opacity: 0.3; }
+
+@keyframes animStar {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-2000px); }
+}
+
+.cosmic-container {
+    position: relative;
+    z-index: 1;
+    background: rgba(0, 0, 0, 0.7);
+    backdrop-filter: blur(10px);
+    border-radius: 20px;
+    padding: 2rem;
+    margin-top: 2rem;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* Star Wars Font */
+.cosmic-title {
+    font-family: Copperplate, Papyrus, fantasy;
+    font-size: 2.5rem; /* Smaller font size for retro feel */
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: #09eee2; /* Neon green */
+    text-shadow: 0 0 10px #133b69, 0 0 20px #223241c7, 0 0 30px #0011ff, 0 0 40px #00a2ff;
+    animation: glow 2s infinite alternate;
+}
+
+.liku{
+    font-family: 'Orbitron', Georgia;
+    font-size: 1.5rem; /* Smaller font size for retro feel */
+    font-weight: 200;
+    test-align: center;
+    letter-spacing: 4px;
+    margin-bottom: 3%;
+    color: #8192a8fd; /* Neon green */
+    text-shadow: 0 0 10px #133b69, 0 0 20px #223241c7, 0 0 30px #0011ff, 0 0 40px #00a2ff;
+    animation: glow 2s infinite alternate;
+}
+/* Glow Animation */
+@keyframes glow {
+    0% {
+        text-shadow: 0 0 10px #133b69, 0 0 20px #1abaff, 0 0 30px #133b69, 0 0 40px #00fff2;
+    }
+    100% {
+        text-shadow: 0 0 20px #ff6106, 0 0 30px #551307, 0 0 40px #133b69, 0 0 50px #00eeff;
+    }
+}
+
+/* Background Animation */
+#stars, #stars2, #stars3 {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+}
+
+#stars { background: transparent; animation: animStar 50s linear infinite; }
+#stars2 { background: transparent; animation: animStar 100s linear infinite; opacity: 0.5; }
+#stars3 { background: transparent; animation: animStar 150s linear infinite; opacity: 0.3; }
+
+@keyframes animStar {
+    from { transform: translateY(0px); }
+    to { transform: translateY(-300px); }
+}
+/* Make card transparent */
+.card {
+    background-color: transparent;
+}
+/* Make card body transparent */
+.card-body {
+    background-color: transparent; /* Fully transparent */
+    border: none; /* Remove border if needed */
+}
+.cosmic-card {
+    background: rgba(0, 20, 40, 0.8);
+    border: 1px solid rgba(0, 255, 255, 0.3);
+    border-radius: 15px;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.cosmic-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+.cosmic-select {
+    background: rgba(0, 30, 60, 0.8);
+    color: #00f3ff;
+    border: 1px solid #00f3ff;
+    border-radius: 8px;
+}
+
+.cosmic-btn-primary {
+    background: linear-gradient(45deg, #00f3ff, #0066ff);
+    border: none;
+    color: #000;
+    font-weight: bold;
+    transition: all 0.3s ease;
+}
+
+.cosmic-preview {
+    border: 2px solid rgba(0, 255, 255, 0.2);
+    border-radius: 10px;
+    overflow: hidden;
+    background: rgba(5, 5, 5, 0.5);
+}
+
+.cosmic-preview-image {
+    border-radius: 8px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+/* Add these rules to ensure proper image display */
+#detectionOutput img {
+    max-width: 100%;
+    height: auto;
+    border: 2px solid #00f3ff;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+}
+
+/* Confidence score display */
+.metrics-display {
+    color: #00f3ff !important;
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.7);
+}
+#detectionOutput {
+    min-height: 300px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: rgba(8, 44, 77, 0.603);
+    border: 2px solid rgba(0, 255, 255, 0.2);
+    border-radius: 10px;
+    padding: 20px;
+}
+#detectionOutput video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    border: 2px solid #00f3ff;
+    box-shadow: 0 0 15px rgba(0, 243, 255, 0.5);
+}
+
+.metrics-display {
+    color: #00f3ff !important;
+    font-size: 1.1rem;
+    text-shadow: 0 0 10px rgba(0, 243, 255, 0.7);
+    margin-top: 15px;
+    text-align: center;
+}
+#detectionOutput img,
+#detectionOutput video {
+    max-width: 100%;
+    max-height: 400px;
+    border-radius: 10px;
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+
+#detectionOutput p {
+    color: rgb(255, 255, 255);
+    font-style: italic;
+    padding-left: 20px;
+    font-size: 16px;
+    
+}
+
+#videoControls {
+    display: none;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 15px;
+}
+
+#processedVideo {
+    max-width: 100%;
+    border-radius: 10px;
+    background: rgb(0, 0, 0);
+}
+#processButton{
+    background: linear-gradient(45deg, #00f3ff, #0066ff);
+    border: none;
+    color: #000;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    border-radius: 10px;
+}
+#processButton:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.2);
+}
+#processButton:active {
+    transform: translateY(0px);
+    box-shadow: 0 0 10px rgba(0, 255, 255, 0.2);
+}
+#me {
+    display: flex; /* Make the container a flex container */
+    flex-direction: row; /* Align children in a row (horizontal layout) */
+    gap: 20px; /* Add space between the two columns */
+    justify-content: center; /* Center the columns horizontally */
+    align-items: stretch; /* Ensure both columns have the same height */
+}
+
+#me .col-md-6 {
+    flex: 1; /* Allow both columns to take equal space */
+    max-width: 50%; /* Ensure each column takes up half the width */
+}

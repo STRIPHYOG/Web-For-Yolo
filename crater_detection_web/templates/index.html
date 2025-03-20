@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Crater Detection</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div id="stars"></div>
+    <div id="stars2"></div>
+    <div id="stars3"></div>
+
+    <div class="container cosmic-container">
+        <h1 class="text-center mb-4 cosmic-title animate__animated animate__fadeIn">
+            🪐 YOLO in the Cosmos 
+
+        </h1>
+        <h5 class="liku" style="align-items: center; text-align: center;">A Comparative Study On Celestial Crater Detection</h5>
+
+
+        <!-- Input Cards -->
+        <div class="row cosmic-card-group">
+            <div class="col-md-6 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">☄️ Image Analysis</h5>
+                        <form id="upload-image-form">
+                            <input type="file" name="input" accept="image/*" class="form-control cosmic-input" id="imageFileInput">
+                            <div class="progress mt-2" id="imageProgressBar" style="display: none;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                            <button type="button" class="btn cosmic-btn-primary w-100 mt-2" id="uploadImageButton">Upload Image</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">🎥 Video Analysis</h5>
+                        <form id="upload-video-form">
+                            <p style="color: firebrick;">Video Analysis is under process. Please check back later.</p>
+                            <input type="file" name="input" accept="video/*" class="form-control cosmic-input" id="videoFileInput">
+                            <div class="progress mt-2" id="videoProgressBar" style="display: none;">
+                                <div class="progress-bar" role="progressbar" style="width: 0%;"></div>
+                            </div>
+                            <button type="button" class="btn cosmic-btn-primary w-100 mt-2" id="uploadVideoButton">Upload Video</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="row mt-4 cosmic-card animate__animated animate__fadeInUp">
+            <div class="col-md-12">
+                <div class="card cosmic-results-card">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-results-title"style="color: aliceblue;">🛸 Detection Output</h5>
+                        <div id="detectionOutput" class="cosmic-preview">
+                            <video controls autoplay id="processedVideo" style="width: 100%; height: auto;">
+                                <source src="" type="video/mp4">
+                                Your browser does not support the video tag.
+                            </video>
+                            <p class="mt-3 metrics-display">
+                                Model: <span id="modelName">N/A</span> | 
+                                Accuracy: <span id="modelAccuracy">N/A</span> | 
+                                Speed: <span id="modelSpeed">N/A</span> FPS
+                            </p>
+                        </div>
+
+                        <!-- Process Button -->
+                        <div class="text-center mt-3" id="processControls">
+                            <button class="btn cosmic-btn-success" id="processButton">
+                                🚀 Process 
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- Model Selection Cards -->
+        <div class="row mt-4 cosmic-card-group">
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">🤖 YOLOv5</h5>
+                        <p class="card-text"style="color: aliceblue;">Select YOLOv5 for crater detection.</p>
+                        <button class="btn cosmic-btn-primary w-100" id="selectYOLOv5">Select YOLOv5</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">🤖 YOLOv8</h5>
+                        <p class="card-text" style="color: aliceblue;">Select YOLOv8 for crater detection.</p>
+                        <button class="btn cosmic-btn-primary w-100" id="selectYOLOv8">Select YOLOv8</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">🤖 YOLOv9</h5>
+                        <p class="card-text" style="color: aliceblue;">Select YOLOv9 for crater detection.</p>
+                        <button class="btn cosmic-btn-primary w-100" id="selectYOLOv9">Select YOLOv9</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-3 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">🤖 YOLOv11</h5>
+                        <p class="card-text" style="color: aliceblue;">Select YOLOv11 for crater detection.</p>
+                        <button class="btn cosmic-btn-primary w-100" id="selectYOLOv11">Select YOLOv11</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 cosmic-card animate__animated animate__fadeInUp">
+            <div class="col-md-12">
+                <div class="card cosmic-results-card">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-results-title" style="color: aliceblue;">🌌 About My Project</h5>
+                        <p class="card-text" style="color: aliceblue;">
+                            This project focuses on detecting celestial craters using advanced YOLO models. 
+                            It aims to provide a comparative analysis of YOLOv5, YOLOv8, YOLOv9, and YOLOv11 
+                            for crater detection in space imagery. The goal is to improve accuracy and efficiency 
+                            in identifying craters for planetary exploration and research.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Code Snippets Section -->
+        <div class="row mt-4 cosmic-card animate__animated animate__fadeInUp">
+            <div class="col-md-12">
+                <div class="card cosmic-results-card">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-results-title" style="color: aliceblue;">💻 Code Snippets</h5>
+                        <pre class="card-text" style="color: aliceblue; background: rgba(0, 0, 0, 0.5); padding: 10px; border-radius: 8px;">
+                            <code>
+# Example Python Code for Crater Detection
+import cv2
+from yolov5 import detect
+
+def detect_craters(image_path):
+    results = detect.run(source=image_path)
+    return results
+                            </code>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Pagination Album Section -->
+        <div class="row mt-4 cosmic-card animate__animated animate__fadeInUp">
+            <div class="col-md-12">
+                <div class="card cosmic-results-card">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-results-title" style="color: aliceblue;">📸 Image Gallery</h5>
+                        <div id="imageCarousel" class="carousel slide" data-bs-ride="carousel">
+                            <div class="carousel-inner" style="max-width: 1000px;height: 320px; margin: 0 auto; border: 2px solid rgba(0, 255, 255, 0.3); border-radius: 10px; overflow: hidden;">                                
+                                <div class="carousel-item active" style="width: 1000px; object-fit: cover;">
+                                    <img src="https://newsmeter.in/h-upload/2023/08/20/352840-20230820140704.webp" class="d-block w-100 carousel-image" alt="Image 1">
+                                </div>
+                                <div class="carousel-item" style="width: 1000px; object-fit: cover;">
+                                    <img src="https://www.esa.int/var/esa/storage/images/esa_multimedia/images/2022/10/labelled_view_of_terra_sirenum_on_mars/24535774-1-eng-GB/Labelled_view_of_Terra_Sirenum_on_Mars_article.jpg" class="d-block w-100 carousel-image" alt="Image 2">
+                                </div>
+                                <div class="carousel-item" style="width: 1000px; object-fit: cover;">
+                                    <img src="https://www.sciencealert.com/images/2023/09/ShackletonCrater.jpg" class="d-block w-100 carousel-image" alt="Image 3">
+                                </div>
+                            </div>
+                            <button class="carousel-control-prev" type="button" data-bs-target="#imageCarousel" data-bs-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Previous</span>
+                            </button>
+                            <button class="carousel-control-next" type="button" data-bs-target="#imageCarousel" data-bs-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="visually-hidden">Next</span>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4 cosmic-card-group" id="me">
+            <!-- Future Work Section -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">🚀 Future Work</h5>
+                        <ul style="color: aliceblue;">
+                            <li>Improve model accuracy using transfer learning.</li>
+                            <li>Expand dataset to include more diverse celestial bodies.</li>
+                            <li>Integrate real-time video processing for live crater detection.</li>
+                            <li>Publish research findings in a scientific journal.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        
+            <!-- Research Papers Section -->
+            <div class="col-md-6 mb-3">
+                <div class="card h-100 cosmic-card animate__animated animate__zoomIn">
+                    <div class="card-body">
+                        <h5 class="card-title cosmic-card-title" style="color: aliceblue;">📚 Research Papers</h5>
+                        <ul style="color: aliceblue;">
+                            <li><a href="#" style="color: #00f3ff;">Comparative Study of YOLO Models for Crater Detection</a></li>
+                            <li><a href="#" style="color: #00f3ff;">Real-Time Celestial Object Detection Using Deep Learning</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+<!-- Footer with About Me Section -->
+<footer class="footer mt-4 cosmic-card">
+    <div class="container text-center">
+        <div class="row">
+            <div class="col-md-12">
+                <h5 class="cosmic-results-title" style="color: aliceblue;">👨‍🚀 About Me</h5>
+                <p style="color: aliceblue;">
+                    Hi! I'm a passionate researcher and developer specializing in computer vision and space exploration. 
+                    This project is a culmination of my interest in AI and astronomy. Feel free to reach out for collaborations!
+                </p>
+                <p style="color: aliceblue;">
+                    © 2023 Crater Detection Project. All rights reserved.
+                </p>
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+</html>

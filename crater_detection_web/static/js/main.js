@@ -26,30 +26,21 @@ function createStarfield() {
 // Initialize cosmic effects
 document.addEventListener('DOMContentLoaded', () => {
     createStarfield();
+    selectedModel = 'yolov8'; // Set YOLOv8 as the default model on page load
 });
 
 // Model Selection
-let selectedModel = 'yolov8'; // Default model
+let selectedModel = null; // Force selection before processing videos
 
-document.getElementById('selectYOLOv5').addEventListener('click', () => {
-    selectedModel = 'yolov5';
-    alert('YOLOv5 selected!');
-});
+function selectModel(model) {
+    selectedModel = model;
+    alert(`${model.toUpperCase()} selected!`);
+}
 
-document.getElementById('selectYOLOv8').addEventListener('click', () => {
-    selectedModel = 'yolov8';
-    alert('YOLOv8 selected!');
-});
-
-document.getElementById('selectYOLOv9').addEventListener('click', () => {
-    selectedModel = 'yolov9';
-    alert('YOLOv9 selected!');
-});
-
-document.getElementById('selectYOLOv11').addEventListener('click', () => {
-    selectedModel = 'yolov11';
-    alert('YOLOv11 selected!');
-});
+document.getElementById('selectYOLOv5').addEventListener('click', () => selectModel('yolov5'));
+document.getElementById('selectYOLOv8').addEventListener('click', () => selectModel('yolov8'));
+document.getElementById('selectYOLOv9').addEventListener('click', () => selectModel('yolov9'));
+document.getElementById('selectYOLOv11').addEventListener('click', () => selectModel('yolov11'));
 
 // Handle image upload
 document.getElementById('uploadImageButton').addEventListener('click', () => {
@@ -61,19 +52,15 @@ document.getElementById('uploadImageButton').addEventListener('click', () => {
         return;
     }
 
-    // Display the uploaded image
     const reader = new FileReader();
     reader.onload = (e) => {
-        const detectionOutput = document.getElementById('detectionOutput');
-        detectionOutput.innerHTML = `
-            <img src="${e.target.result}" alt="Uploaded Image">
-        `;
+        document.getElementById('detectionOutput').innerHTML = `<img src="${e.target.result}" alt="Uploaded Image">`;
         document.getElementById('processControls').style.display = 'block'; // Show Process button
     };
     reader.readAsDataURL(file);
 });
 
-// Handle video upload
+// Handle video upload (forces model selection)
 document.getElementById('uploadVideoButton').addEventListener('click', () => {
     const fileInput = document.getElementById('videoFileInput');
     const file = fileInput.files[0];
@@ -83,17 +70,20 @@ document.getElementById('uploadVideoButton').addEventListener('click', () => {
         return;
     }
 
-    // Display the uploaded video
+    if (!selectedModel) {
+        alert('Please select a model before processing the video.');
+        return;
+    }
+
     const reader = new FileReader();
     reader.onload = (e) => {
-        const detectionOutput = document.getElementById('detectionOutput');
-        detectionOutput.innerHTML = `
+        document.getElementById('detectionOutput').innerHTML = `
             <video controls autoplay id="uploadedVideo">
                 <source src="${e.target.result}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>
         `;
-        document.getElementById('processControls').style.display = 'block'; // Show Process button
+        document.getElementById('processControls').style.display = 'block';
     };
     reader.readAsDataURL(file);
 });
@@ -101,8 +91,14 @@ document.getElementById('uploadVideoButton').addEventListener('click', () => {
 // Handle process button
 document.getElementById('processButton').addEventListener('click', async () => {
     const fileInput = document.getElementById('imageFileInput').files[0] || document.getElementById('videoFileInput').files[0];
+
     if (!fileInput) {
         alert('Please upload an image or video first.');
+        return;
+    }
+
+    if (!selectedModel) {
+        alert('Please select a model before processing.');
         return;
     }
 
@@ -112,10 +108,9 @@ document.getElementById('processButton').addEventListener('click', async () => {
     progressBar.style.display = 'block';
     progressBarInner.style.width = '0%';
 
-    // Upload the file
     const formData = new FormData();
     formData.append('input', fileInput);
-    formData.append('model', selectedModel); // Send selected model
+    formData.append('model', selectedModel);
 
     const endpoint = fileInput.type.startsWith('image') ? '/process_image' : '/process_video';
     const response = await fetch(endpoint, {
@@ -123,17 +118,14 @@ document.getElementById('processButton').addEventListener('click', async () => {
         body: formData,
     });
 
-    // Hide the progress bar
     progressBar.style.display = 'none';
 
-    // Handle the response
     const result = await response.json();
     if (result.error) {
-        alert(result.error); // Show error message
+        alert(result.error);
         return;
     }
 
-    // Display the processed results
     const detectionOutput = document.getElementById('detectionOutput');
     if (fileInput.type.startsWith('image')) {
         detectionOutput.innerHTML = `
@@ -149,4 +141,84 @@ document.getElementById('processButton').addEventListener('click', async () => {
             <p class="mt-3">Model: ${result.model} | Accuracy: ${result.metrics?.accuracy || 'N/A'} | Speed: ${result.metrics?.speed || 'N/A'} FPS</p>
         `;
     }
+});
+
+// Prevent form resubmission on reload
+if (window.history.replaceState) {
+    window.history.replaceState(null, null, window.location.href);
+}
+
+// Clear file input fields on page load
+window.onload = function () {
+    document.getElementById('imageFileInput').value = '';
+    document.getElementById('videoFileInput').value = '';
+};
+
+// Handle image upload and processing
+document.getElementById('uploadImageButton').addEventListener('click', async () => {
+    const fileInput = document.getElementById('imageFileInput');
+    if (fileInput.files.length === 0) {
+        alert('Please select an image file first.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('input', fileInput.files[0]);
+
+    const response = await fetch('/process_image', {
+        method: 'POST',
+        body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+        alert(`Error: ${data.error}`);
+        return;
+    }
+
+    document.getElementById('modelName').textContent = data.model || 'N/A';
+    document.getElementById('modelAccuracy').textContent = data.metrics?.accuracy || 'N/A';
+    document.getElementById('modelSpeed').textContent = data.metrics?.speed || 'N/A';
+
+    document.getElementById('processedImage').src = `data:image/jpeg;base64,${data.image_data}`;
+    document.getElementById('processedImage').style.display = 'block';
+    document.getElementById('processedVideo').style.display = 'none';
+});
+
+// Handle video upload and processing
+document.getElementById('uploadVideoButton').addEventListener('click', async () => {
+    const fileInput = document.getElementById('videoFileInput');
+    if (fileInput.files.length === 0) {
+        alert('Please select a video file first.');
+        return;
+    }
+
+    if (!selectedModel) {
+        alert('Please select a model before processing the video.');
+        return;
+    }
+
+    const formData = new FormData();
+    formData.append('input', fileInput.files[0]);
+
+    const response = await fetch('/process_video', {
+        method: 'POST',
+        body: formData,
+    });
+
+    const data = await response.json();
+
+    if (data.error) {
+        alert(`Error: ${data.error}`);
+        return;
+    }
+
+    document.getElementById('modelName').textContent = data.model || 'N/A';
+    document.getElementById('modelAccuracy').textContent = data.metrics?.accuracy || 'N/A';
+    document.getElementById('modelSpeed').textContent = data.metrics?.speed || 'N/A';
+
+    document.getElementById('processedVideo').src = `/download/${data.video_path}`;
+    document.getElementById('processedVideo').style.display = 'block';
+    document.getElementById('processedImage').style.display = 'none';
 });
